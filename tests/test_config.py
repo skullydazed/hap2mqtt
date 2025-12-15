@@ -2,6 +2,8 @@
 
 import pytest
 from hap2mqtt.config import Config
+import tempfile
+import json
 
 
 def test_config_defaults():
@@ -38,20 +40,26 @@ def test_config_set():
 
 
 def test_config_merge():
-    """Test configuration merging."""
-    config = Config()
+    """Test configuration merging through load method."""
+    # Create a temporary config file
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        temp_config = {
+            'mqtt': {
+                'broker': 'custom.broker.com',
+                'port': 8883,
+            },
+            'custom_key': 'custom_value',
+        }
+        json.dump(temp_config, f)
+        temp_file = f.name
     
-    loaded_config = {
-        'mqtt': {
-            'broker': 'custom.broker.com',
-            'port': 8883,
-        },
-        'custom_key': 'custom_value',
-    }
-    
-    config._merge_config(loaded_config)
-    
-    assert config.get('mqtt.broker') == 'custom.broker.com'
-    assert config.get('mqtt.port') == 8883
-    assert config.get('mqtt.base_topic') == 'homekit'  # Should retain default
-    assert config.get('custom_key') == 'custom_value'
+    try:
+        config = Config(temp_file)
+        
+        assert config.get('mqtt.broker') == 'custom.broker.com'
+        assert config.get('mqtt.port') == 8883
+        assert config.get('mqtt.base_topic') == 'homekit'  # Should retain default
+        assert config.get('custom_key') == 'custom_value'
+    finally:
+        import os
+        os.unlink(temp_file)

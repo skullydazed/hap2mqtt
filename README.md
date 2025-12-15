@@ -180,7 +180,7 @@ mqtt:
 ## Dependencies
 
 - `aiohomekit` - HomeKit controller implementation
-- `asyncio-mqtt` - Async MQTT client
+- `aiomqtt` - Async MQTT client
 - `pyyaml` - YAML configuration file support
 
 ## Troubleshooting

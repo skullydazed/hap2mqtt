@@ -1,6 +1,8 @@
 """Integration tests for hap2mqtt components."""
 
 import pytest
+import tempfile
+import os
 from hap2mqtt.homekit_controller import HomeKitController
 from hap2mqtt.mqtt_publisher import MQTTPublisher
 from hap2mqtt.bridge import HomeKitMQTTBridge
@@ -8,11 +10,19 @@ from hap2mqtt.bridge import HomeKitMQTTBridge
 
 def test_homekit_controller_instantiation():
     """Test that HomeKitController can be instantiated."""
-    controller = HomeKitController(pairing_data_file="/tmp/test_pairing.json")
+    # Use a temporary file for pairing data
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        temp_file = f.name
     
-    assert controller is not None
-    assert controller.controller is not None
-    assert controller.pairings == {}
+    try:
+        controller = HomeKitController(pairing_data_file=temp_file)
+        
+        assert controller is not None
+        assert controller.controller is not None
+        assert controller.pairings == {}
+    finally:
+        if os.path.exists(temp_file):
+            os.unlink(temp_file)
 
 
 def test_mqtt_publisher_instantiation():
