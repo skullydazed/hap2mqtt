@@ -4,7 +4,7 @@ import asyncio
 import json
 import logging
 from typing import Dict, Any, Optional
-import asyncio_mqtt as aiomqtt
+import aiomqtt
 
 logger = logging.getLogger(__name__)
 
