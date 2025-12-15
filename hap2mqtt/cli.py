@@ -40,6 +40,7 @@ async def run_bridge(config: Config):
         mqtt_username=config.get('mqtt.username'),
         mqtt_password=config.get('mqtt.password'),
         mqtt_base_topic=config.get('mqtt.base_topic'),
+        mqtt_hostname=config.get('mqtt.hostname'),
         pairing_data_file=config.get('homekit.pairing_data_file'),
     )
     

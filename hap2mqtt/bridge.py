@@ -19,6 +19,7 @@ class HomeKitMQTTBridge:
         mqtt_username: Optional[str] = None,
         mqtt_password: Optional[str] = None,
         mqtt_base_topic: str = "homekit",
+        mqtt_hostname: Optional[str] = None,
         pairing_data_file: str = "pairing_data.json",
     ):
         """Initialize the bridge.
@@ -29,6 +30,7 @@ class HomeKitMQTTBridge:
             mqtt_username: MQTT username (optional)
             mqtt_password: MQTT password (optional)
             mqtt_base_topic: Base topic for MQTT messages
+            mqtt_hostname: Hostname to use in MQTT topics (optional, defaults to system hostname)
             pairing_data_file: Path to store pairing data
         """
         self.homekit = HomeKitController(pairing_data_file=pairing_data_file)
@@ -38,6 +40,7 @@ class HomeKitMQTTBridge:
             username=mqtt_username,
             password=mqtt_password,
             base_topic=mqtt_base_topic,
+            hostname=mqtt_hostname,
         )
         self.running = False
         self._tasks = []

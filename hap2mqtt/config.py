@@ -37,6 +37,7 @@ class Config:
                 'username': None,
                 'password': None,
                 'base_topic': 'homekit',
+                'hostname': None,  # Defaults to system hostname if not set
             },
             'homekit': {
                 'pairing_data_file': 'pairing_data.json',

@@ -3,6 +3,7 @@
 import asyncio
 import json
 import logging
+import socket
 from typing import Dict, Any, Optional
 import aiomqtt
 
@@ -20,6 +21,7 @@ class MQTTPublisher:
         password: Optional[str] = None,
         base_topic: str = "homekit",
         client_id: Optional[str] = None,
+        hostname: Optional[str] = None,
     ):
         """Initialize the MQTT publisher.
         
@@ -30,12 +32,14 @@ class MQTTPublisher:
             password: MQTT password (optional)
             base_topic: Base topic for all messages
             client_id: MQTT client ID (optional)
+            hostname: Hostname to use in topics (defaults to system hostname)
         """
         self.broker = broker
         self.port = port
         self.username = username
         self.password = password
         self.base_topic = base_topic
+        self.hostname = hostname or socket.gethostname()
         self.client_id = client_id or "hap2mqtt"
         self.client: Optional[aiomqtt.Client] = None
         self._connected = False
@@ -120,7 +124,8 @@ class MQTTPublisher:
         Args:
             status: Availability status (online/offline)
         """
-        await self.publish("status", status, retain=True)
+        topic = f"{self.hostname}/status"
+        await self.publish(topic, status, retain=True)
 
     async def publish_device_state(
         self,
@@ -139,7 +144,7 @@ class MQTTPublisher:
             characteristic_type: Characteristic type
             value: Characteristic value
         """
-        topic = f"{device_alias}/{accessory_id}/{service_type}/{characteristic_type}"
+        topic = f"{self.hostname}/{device_alias}/{accessory_id}/{service_type}/{characteristic_type}"
         await self.publish(topic, value, retain=True)
 
     async def publish_accessory_state(
@@ -155,7 +160,7 @@ class MQTTPublisher:
             accessory_id: Accessory ID
             state: Full state dictionary
         """
-        topic = f"{device_alias}/{accessory_id}/state"
+        topic = f"{self.hostname}/{device_alias}/{accessory_id}/state"
         await self.publish(topic, state, retain=True)
 
     async def publish_discovery(
@@ -171,7 +176,7 @@ class MQTTPublisher:
             accessory_id: Accessory ID
             discovery_info: Discovery information
         """
-        topic = f"{device_alias}/{accessory_id}/config"
+        topic = f"{self.hostname}/{device_alias}/{accessory_id}/config"
         await self.publish(topic, discovery_info, retain=True)
 
     @property

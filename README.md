@@ -115,24 +115,41 @@ hap2mqtt run --verbose
 The bridge publishes device states to MQTT using the following topic structure:
 
 ```
-<base_topic>/<device_alias>/<accessory_id>/<service_type>/<characteristic_type>
+<base_topic>/<hostname>/<device_alias>/<accessory_id>/<service_type>/<characteristic_type>
 ```
+
+Where:
+- `hostname`: The hostname of the machine running hap2mqtt (supports multiple bridge instances)
+- `device_alias`: The alias/name of the paired HomeKit device
+- `accessory_id`: The accessory ID from HomeKit
+- `service_type`: The HomeKit service type
+- `characteristic_type`: The HomeKit characteristic type
 
 Example topics:
 
 ```
-homekit/homebridge/1/public.hap.service.lightbulb/public.hap.characteristic.on
-homekit/homebridge/1/public.hap.service.lightbulb/public.hap.characteristic.brightness
-homekit/hue_bridge/2/public.hap.service.lightbulb/public.hap.characteristic.hue
+homekit/livingroom-pi/homebridge/1/public.hap.service.lightbulb/public.hap.characteristic.on
+homekit/livingroom-pi/homebridge/1/public.hap.service.lightbulb/public.hap.characteristic.brightness
+homekit/bedroom-pi/hue_bridge/2/public.hap.service.lightbulb/public.hap.characteristic.hue
 ```
 
 Full accessory state is also published to:
 
 ```
-<base_topic>/<device_alias>/<accessory_id>/state
+<base_topic>/<hostname>/<device_alias>/<accessory_id>/state
 ```
 
 Bridge availability is published to:
+
+```
+<base_topic>/<hostname>/status
+```
+
+### Multiple Bridge Support
+
+The hostname-based topic structure allows multiple hap2mqtt instances to run simultaneously on different machines, each publishing to their own topic namespace. This prevents conflicts and makes it easy to identify which bridge is publishing each message.
+
+You can customize the hostname used in topics via the `mqtt.hostname` configuration option.
 
 ```
 <base_topic>/status

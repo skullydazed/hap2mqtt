@@ -40,6 +40,28 @@ def test_mqtt_publisher_instantiation():
     assert not publisher.is_connected
 
 
+def test_mqtt_publisher_hostname():
+    """Test that MQTTPublisher uses hostname in topics."""
+    publisher = MQTTPublisher(
+        broker="localhost",
+        port=1883,
+        base_topic="homekit",
+        hostname="test-host"
+    )
+    
+    assert publisher.hostname == "test-host"
+    
+    # Test default hostname (system hostname)
+    publisher_default = MQTTPublisher(
+        broker="localhost",
+        port=1883,
+        base_topic="homekit"
+    )
+    
+    assert publisher_default.hostname is not None
+    assert len(publisher_default.hostname) > 0
+
+
 def test_bridge_instantiation():
     """Test that HomeKitMQTTBridge can be instantiated."""
     bridge = HomeKitMQTTBridge(
@@ -52,6 +74,17 @@ def test_bridge_instantiation():
     assert bridge.homekit is not None
     assert bridge.mqtt is not None
     assert not bridge.running
+
+
+def test_bridge_with_custom_hostname():
+    """Test that bridge accepts custom hostname."""
+    bridge = HomeKitMQTTBridge(
+        mqtt_broker="localhost",
+        mqtt_port=1883,
+        mqtt_hostname="custom-host",
+    )
+    
+    assert bridge.mqtt.hostname == "custom-host"
 
 
 @pytest.mark.asyncio
