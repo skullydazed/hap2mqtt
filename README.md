@@ -151,10 +151,6 @@ The hostname-based topic structure allows multiple hap2mqtt instances to run sim
 
 You can customize the hostname used in topics via the `mqtt.hostname` configuration option.
 
-```
-<base_topic>/status
-```
-
 ## Examples
 
 ### Example Workflow
