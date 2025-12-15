@@ -1,0 +1,24 @@
+# HomeKit to MQTT Bridge Configuration
+
+# MQTT Broker Settings
+mqtt:
+  broker: localhost        # MQTT broker hostname or IP
+  port: 1883              # MQTT broker port
+  username: null          # MQTT username (optional)
+  password: null          # MQTT password (optional)
+  base_topic: homekit     # Base topic for all MQTT messages
+
+# HomeKit Settings
+homekit:
+  pairing_data_file: pairing_data.json  # File to store pairing data
+  
+  # List of paired devices to monitor
+  # Add devices here after pairing them with the 'hap2mqtt pair' command
+  devices:
+    # Example:
+    # - alias: my_bridge
+    # - alias: hue_bridge
+
+# Logging Settings
+logging:
+  level: INFO  # Logging level: DEBUG, INFO, WARNING, ERROR, CRITICAL
